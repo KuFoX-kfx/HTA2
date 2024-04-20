@@ -1,0 +1,50 @@
+.catalog-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product {
+    width: 300px;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.product img {
+    width: 100%;
+}
+
+.product h2 {
+    margin: 10px 0;
+}
+
+.product p {
+    color: #666;
+}
+
+.product span {
+    font-weight: bold;
+}
+
+
+
+.add-to-card-button {
+    appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background: linear-gradient(60deg, #71FF90, #666CFF);
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 16px;
+  min-width: 100px;
+}
+.add-to-card-button:hover {
+    cursor: pointer;
+  background: linear-gradient(45deg, #2dff5b, #3c43ff);
+}
+
+.close:hover {
+cursor: pointer;
+}

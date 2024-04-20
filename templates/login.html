@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Войти</title>
+    <link rel="stylesheet" href="reg.css">
+     <link rel="stylesheet" href="all-styles.css">
+</head>
+<body>
+    
+    <div class="container">
+    <h2>Вход</h2>
+    <form action="#" method="post" enctype="multipart/form-data">
+        <label for="username">Логин:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required><br>
+        
+<div class="inline">
+    <button class="gradient-btn size-btn-login">Войти</button> <button class="faceid-btn size-btn-loginfaceid" onclick="GoToLoginFaceId()">Войти по Deanon ID</button>
+</div>
+        
+        <p>Нет аккаунта? <a href="reg.html">Создайте его за минуту</a>.</p>
+
+    </form>
+</div>
+<script> 
+    function GoToLoginFaceId() {
+    window.location.href='login-faceId.html'
+    }
+</script>
+
+</body>
+</html>

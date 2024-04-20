@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товаров</title>
+    <link rel="stylesheet" href="catalog-styles.css">
+    <link rel="stylesheet" href="mark-team-styles.css">
+    <link rel="stylesheet" href="question-team-styles.css">
+</head>
+<body>
+    
+    
+    <div class="catalog-container">
+        
+<div class="product">
+            <img src="Card1.webp" alt="Product 1">
+            <h2>deanon team</h2>
+            
+            
+            <button class="add-to-card-button" onclick="addToCart()">Посмотреть</button>
+        </div>
+        
+        
+        
+    </div>
+    
+        <button class="gradient-btn" id="openPopupBtn">Оценить</button><button class="gradient-btn" id="openModal">Задать вопрос</button>
+
+  <div id="evaluationPopup" class="popup">
+    <span class="closeBtn" onclick="closePopup()">&times;</span>
+    <h2>Оценка команды</h2>
+    <form id="evaluationForm">
+        <h3>Дизайн:</h3>
+      <div class="rating">
+  <input type="radio" id="design5" name="design" value="5">
+  <label for="design5">☆</label>
+  <input type="radio" id="design4" name="design" value="4">
+  <label for="design4">☆</label>
+  <input type="radio" id="design3" name="design" value="3">
+  <label for="design3">☆</label>
+  <input type="radio" id="design2" name="design" value="2">
+  <label for="design2">☆</label>
+  <input type="radio" id="design1" name="design" value="1">
+  <label for="design1">☆</label>
+
+  
+  
+  
+  
+</div>
+      <h3>Юзабилити:</h3>
+      <div class="rating">
+  <input type="radio" id="usability5" name="usability" value="5">
+  <label for="usability5">☆</label>
+  <input type="radio" id="usability4" name="usability" value="4">
+  <label for="usability4">☆</label>
+  <input type="radio" id="usability3" name="usability" value="3">
+  <label for="usability3">☆</label>
+  <input type="radio" id="usability2" name="usability" value="2">
+  <label for="usability2">☆</label>
+  <input type="radio" id="usability1" name="usability" value="1">
+  <label for="usability1">☆</label>
+</div>
+  
+  
+  
+
+      <h3>Верстка:</h3>
+      <div class="rating">
+  <input type="radio" id="markup5" name="markup" value="5">
+  <label for="markup5">☆</label>
+  <input type="radio" id="markup4" name="markup" value="4">
+  <label for="markup4">☆</label>
+  <input type="radio" id="markup3" name="markup" value="3">
+  <label for="markup3">☆</label>
+  <input type="radio" id="markup2" name="markup" value="2">
+  <label for="markup2">☆</label>
+  <input type="radio" id="markup1" name="markup" value="1">
+  <label for="markup1">☆</label>
+</div>
+  
+  
+  
+  
+
+          <h3>Реализация:</h3>
+          
+          <div class="rating">
+  <input type="radio" id="htmlcss5" name="htmlcss" value="5">
+  <label for="htmlcss5">☆</label>
+  <input type="radio" id="htmlcss4" name="htmlcss" value="4">
+  <label for="htmlcss4">☆</label>
+  <input type="radio" id="htmlcss3" name="htmlcss" value="3">
+  <label for="htmlcss3">☆</label>
+  <input type="radio" id="htmlcss2" name="htmlcss" value="2">
+  <label for="htmlcss2">☆</label>
+  <input type="radio" id="htmlcss1" name="htmlcss" value="1">
+  <label for="htmlcss1">☆</label>
+</div>
+
+  
+  
+  
+  
+</div>
+<!--внимание вопрос!-->
+<div id="modal" class="popup">
+  
+    <span class="close">&times;</span>
+    <h2>Вопрос команде</h2>
+    <form id="questionForm">
+      <label for="fullName">ФИО:</label><br/>
+      <input type="text" id="fullName" name="fullName" required><br/>
+      
+      <label for="email">Электронная почта:</label><br/>
+      <input type="email" id="email" name="email" required><br/>
+      
+      <label for="question">Ваш вопрос:</label><br/>
+      <textarea id="question" name="question" rows="4" maxlength="255" required></textarea><br/>
+      
+      <button type="submit">Отправить</button>
+    </form>
+  
+</div>
+
+        
+		
+		
+    </form>
+  </div>
+
+  <script src="script-mark-team.js"></script>
+  <script src="script-question-team.js"></script>
+
+
+      
+
+    
+</body>
+</html>

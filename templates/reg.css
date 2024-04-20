@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.container {
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input, select {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 3px;
+}
+
+.gradient-btn {
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background: linear-gradient(60deg, #71FF90, #666CFF);
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 16px;
+  min-width: 100px;
+}
+
+.gradient-btn:hover {
+    cursor: pointer;
+  background: linear-gradient(45deg, #2dff5b, #3c43ff);
+}
+input:focus {
+  border-color: linear-gradient(45deg, #2dff5b, #3c43ff);
+}
+.center {
+    text-align: center;
+}
+
+@media  screen and (min-width: 525px) {
+  .container {
+    max-width: 30%;
+  }
+  
+}
+
+@media  screen and (max-width: 525px) {
+  .container {
+    max-width: 80%;
+  }
+}
+
+.size-btn-login {
+  width: 49%;
+}
+.faceid-btn {
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background: #0dca36ae;
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 14px;
+  min-width: 100px;
+}
+
+.size-btn-loginfaceid {
+  width: 49%;
+}
+
+.size-btn-addMember {
+  width: 30%;
+}

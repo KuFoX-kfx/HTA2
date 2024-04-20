@@ -1,0 +1,20 @@
+  .gallery-container {
+    width: 100%;
+    max-width: 890px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+  }
+  .gallery-slide {
+    width: 200px; /* Вы можете выбрать другой размер */
+    height: 100px; /* Вы можете выбрать другой размер */
+    margin: 0 10px;
+    background-color: #ccc;
+  }
+  .nav-button {
+    cursor: pointer;
+    padding: 20px;
+  }

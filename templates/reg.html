@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="reg.css">
+    <link rel="stylesheet" href="all-styles.css">
+</head>
+<body>
+    <div class="container">
+    <h2>Регистрация</h2>
+    <form action="#" method="post" enctype="multipart/form-data">
+        <label for="team_name">Название команды:</label>
+        <input type="text" id="team_name" name="team_name" maxlength="20">
+        <label for="team_photo">Баннер:</label>
+        <input type="file" id="team_photo" name="team_photo" accept=".png,.jpeg,.jpg">
+        <label for="email">Электронная почта:</label>
+        <input type="text" id="email" name="email">
+        <label for="username">Логин:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password1">Пароль:</label>
+        <input type="password" id="password1" name="password1" required>
+        <label for="password2">Повторите пароль:</label>
+        <input type="password" id="password2" name="password2" required>
+        
+<div class="center">
+<button type="submit" class="gradient-btn size-btn">Зарегистрироваться</button>
+</div>
+        
+    <p>Уже зарегистрированы? <a href="login">Войдите в систему</a>.</p>
+    </form>
+
+</div>
+<script language="JavaScript"> 
+    function GoToMAIN() {
+    document.location.href='login.html'
+    }
+</script>
+<script src="script-nobigfile.js"></script>
+</body>
+</html>
