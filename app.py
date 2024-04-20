@@ -105,11 +105,14 @@ def index():
 # логин и регистрация
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return f'Вы уже вли в аккаунт: {current_user.username}'
     if request.method == 'POST':
         # Получаем данные из формы
         team_name = request.form['team_name']
         team_photo = request.files['team_photo']
         email = request.form['email']
+        about = request.form['about']
         username = request.form['username']
         password1 = request.form['password1']
         password2 = request.form['password2']
@@ -125,7 +128,7 @@ def register():
             team_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         # Добавляем оманду в базу данных
-        command = Command(name=team_name, image=filename, email=email, username=username, password=password1)
+        command = Command(team_name=team_name, image=filename, team_info=about, email=email, username=username, password=password1)
         try:
             session.add_all([command])
             session.commit()

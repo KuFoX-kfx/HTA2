@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="reg.css">
-    <link rel="stylesheet" href="all-styles.css">
+    <link type="text/css" href="{{ url_for('static', filename='css/reg.css')}}" rel="stylesheet" />
+    <link type="text/css" href="{{ url_for('static', filename='css/all-styles.css')}}" rel="stylesheet" />
 </head>
 <body>
     <div class="container">
@@ -14,6 +14,8 @@
     <form action="#" method="post" enctype="multipart/form-data">
         <label for="team_name">Название команды:</label>
         <input type="text" id="team_name" name="team_name" maxlength="20">
+        <label for="about">О вас:</label>
+        <textarea type="text" id="about" name="about" maxlength="255"></textarea>
         <label for="team_photo">Баннер:</label>
         <input type="file" id="team_photo" name="team_photo" accept=".png,.jpeg,.jpg">
         <label for="email">Электронная почта:</label>

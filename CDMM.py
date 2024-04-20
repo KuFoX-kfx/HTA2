@@ -15,7 +15,8 @@ association_table = Table('user_commands', Base.metadata,
 class Command(Base):
     __tablename__ = 'commands'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String,unique=True)
+    team_name = Column(String,unique=True)
+    team_info = Column(String)  
     image = Column(String)   
     email = Column(String, unique=True)
     username = Column(String, unique=True)
