@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Личный кабинет команды</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Личный кабинет команды</h1>
+
+    <form method="POST" action="{{ url_for('team') }}">
+        <label for="team_name">Название команды:</label>
+        <input type="text" id="team_name" name="team_name" value="{{ command.team_name }}"><br><br>
+
+        <label for="team_info">Информация о команде:</label>
+        <textarea id="team_info" name="team_info">{{ command.team_info }}</textarea><br><br>
+
+        <label for="team_image">Фото команды:</label>
+        <input type="file" id="team_image" name="team_image"><br>
+        {% if command.image %}
+            <img src="{{ url_for('static', filename=command.image) }}" alt="Team Image" style="max-width: 100px;">
+        {% endif %}
+        <br><br>
+
+        <label for="username">Имя пользователя:</label>
+        <input type="text" id="username" name="username" value="{{ command.username }}"><br><br>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" value="{{ command.password }}"><br><br>
+
+        <input type="submit" value="Сохранить">
+    </form>
+
+    <h2>Участники команды:</h2>
+    <ul>
+        {% for user in users %}
+        <li>
+            <span id="user_{{ user.id }}" style="display: none;">
+                <strong>ФИО:</strong> {{ user.FIO }}<br>
+                <strong>Информация о пользователе:</strong> {{ user.user_info }}<br>
+            </span>
+            <button onclick="editUser('{{ user.id }}')">Редактировать</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div id="editForm" style="display: none;">
+        <h3>Редактировать участника:</h3>
+        <form id="userForm" method="POST" action="{{ url_for('update_user') }}">
+            <input type="hidden" id="editUserId" name="user_id">
+            <label for="editFIO">ФИО:</label>
+            <input type="text" id="editFIO" name="FIO"><br><br>
+            <label for="editUserInfo">Информация о пользователе:</label>
+            <textarea id="editUserInfo" name="user_info"></textarea><br><br>
+            <input type="submit" value="Сохранить">
+            <button type="button" onclick="cancelEdit()">Отмена</button>
+        </form>
+    </div>
+
+    <script>
+        function editUser(userId) {
+            const userSpan = document.getElementById('user_' + userId);
+            const editForm = document.getElementById('editForm');
+            const editFIO = document.getElementById('editFIO');
+            const editUserInfo = document.getElementById('editUserInfo');
+
+            // Set values in edit form based on displayed user info
+            editFIO.value = userSpan.querySelector('strong:nth-of-type(1)').nextSibling.textContent.trim();
+            editUserInfo.value = userSpan.querySelector('strong:nth-of-type(2)').nextSibling.textContent.trim();
+
+            // Set user_id in hidden input field
+            document.getElementById('editUserId').value = userId;
+
+            // Hide user info and show edit form
+            userSpan.style.display = 'none';
+            editForm.style.display = 'block';
+        }
+
+        function cancelEdit() {
+            const userSpan = document.getElementById('user_' + document.getElementById('editUserId').value);
+            const editForm = document.getElementById('editForm');
+
+            // Clear input fields
+            document.getElementById('editFIO').value = '';
+            document.getElementById('editUserInfo').value = '';
+
+            // Show user info and hide edit form
+            userSpan.style.display = 'block';
+            editForm.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

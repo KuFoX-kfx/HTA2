@@ -4,10 +4,20 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from CDMM import Command, User, connect
+from hashlib import md5
 import hashlib
 from wtforms.validators import InputRequired, Length
 from flask_session import Session
+from werkzeug.utils import secure_filename
 from flask_login import current_user, LoginManager, UserMixin, login_user, login_required, logout_user
+
+# Заглушка для данных команды
+team_data = {
+    'team_name': 'Моя команда',
+    'team_info': 'Описание моей команды',
+    'team_members': 'Участник 1\nУчастник 2\nУчастник 3',
+    'profile_image': 'default-profile.png'
+}
 
 # Создаем приложение Flask
 app = Flask(__name__)
@@ -19,6 +29,7 @@ session = Session()
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.secret_key = '25n23j5b2jh5v23jh5v24j5v2hj45'  # Задайте свой секретный ключ для сессий
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Создаем таблицы, если они еще не созданы
 connect('sqlite:///example.db')
 
@@ -35,22 +46,18 @@ if not os.path.exists(UPLOAD_FOLDER):
 # Список для хранения данных о загруженных изображениях
 images_data = []
 
-class User(UserMixin):
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
 
-    def get_id(self):
-        return self.username
+    
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-    def is_active(self):
-        return True
+Base = declarative_base()
 
-    def is_authenticated(self):
-        return True
+# Модель данных для пользователей
 
-    def is_anonymous(self):
-        return False
+
+    
 
 def calculate_file_hash(file_path):
     """Вычисляет хэш-сумму файла по указанному пути с использованием заданного алгоритма."""
@@ -71,30 +78,53 @@ def calculate_file_hash(file_path):
 
     # Возвращаем строковое представление хэш-суммы
     return hash_obj.hexdigest()
+# def rename_file_to_hash(file_path):
+#     """Переименовывает файл по указанному пути в его хэш-сумму."""
+
+#     # Вычисляем хэш-сумму файла
+#     file_hash = calculate_file_hash(file_path)
+
+#     # Получаем имя файла и расширение
+#     file_name, file_extension = os.path.splitext(os.path.basename(file_path))
+
+#     # Формируем новое имя файла из хэш-суммы и оригинального расширения
+#     new_file_name = f"{file_hash}{file_extension}"
+
+#     # Получаем путь к директории файла
+#     file_directory = os.path.dirname(file_path)
+
+#     # Формируем полный путь к новому имени файла
+#     new_file_path = os.path.join(file_directory, new_file_name)
+
+#     # Переименовываем файл
+#     try:
+#         os.rename(file_path, new_file_path)
+#     except:
+#         pass
+
+#     return new_file_name
+
+# @login_manager.user_loader
+# def load_user(username):
+#     # Query and return user from the database
+#     command = session.query(Command).filter_by(username=username).first()
+#     if command:
+#         return Command(command.username, command.password)
+#     return None
 def rename_file_to_hash(file_path):
-    """Переименовывает файл по указанному пути в его хэш-сумму."""
+    # Generate a hash-based filename from the file path
+    filename = os.path.basename(file_path)
+    hash_value = md5(filename.encode()).hexdigest()
+    _, extension = os.path.splitext(filename)
+    new_filename = hash_value + extension
+    return new_filename
 
-    # Вычисляем хэш-сумму файла
-    file_hash = calculate_file_hash(file_path)
-
-    # Получаем имя файла без пути
-    file_name = os.path.basename(file_path)
-
-    # Формируем новое имя файла из хэш-суммы
-    new_file_name = f"{file_hash}.{file_name}"
-
-    # Переименовываем файл
-    os.rename(file_path, os.path.join(os.path.dirname(file_path), new_file_name))
-
-    return new_file_name
 
 @login_manager.user_loader
 def load_user(username):
     # Query and return user from the database
     command = session.query(Command).filter_by(username=username).first()
-    if command:
-        return User(command.username, command.password)
-    return None
+    return command  # Возвращаем объект пользователя (Command) или None, если пользователь не найден
 
 @app.route('/')
 def index():
@@ -118,14 +148,30 @@ def register():
         password2 = request.form['password2']
         
         # Сравниваем пароли
-        if password1!=password2:
-            return "Ведёные пароли не совпадают"
+        if password1!=password2: return "Ведёные пароли не совпадают"
 
         # Сохраняем изображение в папку для загрузок
         # ДОБАВИТЬ ИЗМЕНЕНИЕ ИМЕНИ НА ХЕШ СУММУ
-        if team_photo.filename.endswith(('png', 'jpg', 'jpeg')):
-            filename = team_photo.filename
-            team_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # if team_photo.filename.endswith(('png', 'jpg', 'jpeg')):
+        #     filename = team_photo.filename
+        #     new_filename = rename_file_to_hash(filename)
+        #     team_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], new_filename))
+        
+        if 'team_photo' not in request.files:
+            return "Файл не был загружен"
+
+        file = request.files['team_photo']
+        if file.filename == '':
+            return "Файл не выбран"
+        
+        if file:
+            filename = secure_filename(file.filename)
+            new_filename = rename_file_to_hash(filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+            file.save(file_path)
+            # Теперь file_path содержит путь к загруженному файлу с хеш-именем
+        
+
 
         # Добавляем оманду в базу данных
         command = Command(team_name=team_name, image=filename, team_info=about, email=email, username=username, password=password1)
@@ -146,19 +192,17 @@ def login():
     if current_user.is_authenticated:
         return f'Вы уже вли в аккаунт: {current_user.username}'
     if request.method == 'POST':
-            command = session.query(Command).filter_by(username=request.form["username"]).first()
-            if not command:
-               return "Команда с таким логиином не найдена" 
-            if command.password!=request.form["password"]:
-                return "Введён не правильный пароль"
-            user = User(request.form['username'], request.form['password'])
-            login_user(user)
-            return redirect(url_for('dashboard'))
+        command = session.query(Command).filter_by(username=request.form["username"]).first()
+        if not command:
+           return "Команда с таким логиином не найдена" 
+        if command.password!=request.form["password"]:
+            return "Введён не правильный пароль"
+        login_user(command)
+        return redirect(url_for('team'))
             
     return render_template('login.html')
 
 @app.route('/dashboard')
-@login_required
 def dashboard():
     if current_user.is_authenticated:
         return f'Hello, {current_user.username}! This is the dashboard.'
@@ -172,7 +216,97 @@ def logout():
     return 'You are logged out'
 
 
-# Запускаем приложение Flask
+# Личный каббинет команды
+# Страница личного кабинета команды
+# @app.route('/team', methods=['GET', 'POST'])
+# def team():
+#     if not current_user.is_authenticated: return redirect(url_for('login'))
+#     command = session.query(Command).filter_by(username=current_user.username).first()
+
+#     if request.method == 'POST':
+#         command.team_name = request.form['team_name']
+#         command.team_info = request.form['team_info']
+#         command.image = request.form['image']
+#         command.username = request.form['username']
+#         command.password = request.form['password']
+#         try:
+#             session.add_all([command])
+#             session.commit()
+#             return redirect(url_for('login'))
+#         except Exception as ex:
+#             print(ex)
+#             return "Проиошла оибка"
+#     return render_template('lk.html', command=command)
+
+@app.route('/team', methods=['GET', 'POST'])
+def team():
+    if not current_user.is_authenticated: return redirect(url_for('login'))
+    command = session.query(Command).filter_by(username=current_user.username).first()
+    users = command.users
+    if request.method == 'POST':
+        
+        command.team_name = request.form['team_name']
+        command.team_info = request.form['team_info']
+        command.username = request.form['username']
+        command.password = request.form['password']
+
+        # Обработка загрузки изображения команды
+        if 'team_image' in request.files:
+            file = request.files['team_image']
+            if file.filename != '':
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file = rename_file_to_hash(f"static/uploads/{file.filename}")
+                command.image = os.path.join('uploads', file)
+
+
+        session.commit()
+
+        
+    if current_user.is_authenticated: return render_template('lk.html', command=command, users=users)
+    return redirect(url_for('login'))
+
+# Добавление нового участника
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    FIO = request.form['FIO']
+    user_info = request.form['user_info']
+
+
+    # Обработка загрузки изображения пользователя
+    new_user = User(FIO=FIO, user_info=user_info)
+
+    if 'user_image' in request.files:
+        file = request.files['user_image']
+        if file.filename != '':
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file = rename_file_to_hash(f"static/uploads/{file.filename}")
+            new_user.user_image = os.path.join('uploads', file)
+    command = session.query(Command).filter_by(username=current_user.username).first()
+    new_user.commands.append(command)
+    
+    
+    session.add(new_user)
+    session.commit()
+
+    return redirect(url_for('team'))
+
+@app.route('/update_user', methods=['POST'])
+def update_user():
+    user_id = request.form['user_id']
+    FIO = request.form['FIO']
+    user_info = request.form['user_info']
+
+    user = session.query(User).get(user_id)
+    if user:
+        user.FIO = FIO
+        user.user_info = user_info
+        session.commit()
+
+    return redirect(url_for('team'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
